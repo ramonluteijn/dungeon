@@ -4,6 +4,7 @@ public class Game {
 	
 	private Scanner scanner;
 	private Player player;
+	private Room currentRoom;
 	
 	public Game() {
 		scanner = new Scanner(System.in);
@@ -12,52 +13,57 @@ public class Game {
 	
 	public void play() {
 		boolean keepPlaying = true;
-		
+		setUpRooms();
+		String command = "?";
 		while(keepPlaying) {
-			setUpRooms();
-			
+//			System.out.println("insert name");
+//			player.setName();
+			System.out.println("insert command");
+			handleCommand(scanner.nextLine());	
 			// play again 
-			System.out.println("want to play again? (y/n)");
-			if(player.getInput().equals("n")) {
-				keepPlaying = false;
-				break;
-			}
-			else if (player.getInput().equals("y")) {
-				keepPlaying = true;
-			}
-			else {
-				System.out.println("geen juiste input");
-			}
-		}
-	}
-	private void setCommand(String userInput) {
-		String result = "?";
-		userInput = userInput.toLowerCase();
-		switch(userInput) {
-			case "go": result = "go";
-				break;
-			case "item": result = "item";	
-				
-			default: result = "?";
-				break;
+//			System.out.println("want to play again? (y/n)");
+//			if(player.getPlayAgain().equals("n")) {
+//				keepPlaying = false;
+//				break;
+//			}
+//			else if (player.getPlayAgain().equals("y")) {
+//				keepPlaying = true;
+//			}
+//			else {
+//				System.out.println("geen juiste input");
+//			}
+//			keepPlaying = false;
 		}
 	}
 	
-	private void handleCommand(String userInput, String command) {
+	// user commands
+	private void handleCommand(String userInput) {
+	    String str = userInput;
+	    String[] arrOfStr = str.split(" ");
+	    String input = "?";
+	    String command = "?";
+	    if(arrOfStr.length >1) {
+	    	input = arrOfStr[1];
+	    	
+	    }
+	    command = arrOfStr[0];
 		switch(command) {
-			case "go":
-					switch(userInput) {
-						case "east": 
-							break;
-					}
-			case "use":
-					switch(userInput) {
-						case "east": 
-							break;
-					}
+			case "go": if(currentRoom.goRoom(input) == null) {
+							System.out.println("cannot go this way");
+						}
+						else {
+							currentRoom = currentRoom.goRoom(input);
+							System.out.println("travel was succesful");
+						}
+				break;
+			case "use": 
+				break;
+			case "get": player.getItem(currentRoom.getItem(input));
+					currentRoom.removeItem(input);
 				break;
 			case "look":
-				// teel whats in the room
+				 System.out.println("possibilities: ");
+				 System.out.println(currentRoom.getMap());	
 				break;
 			case "help":
 				// print commands
@@ -67,65 +73,61 @@ public class Game {
 	
 	//create rooms
 	private void setUpRooms() {
-		// 2 deuren naar 4 2
 		Room firstRoom = new Room("first room");
-		System.out.println(firstRoom.getName());
-//		firstRoom.addNearbyRooms("east",2);
-//		firstRoom.addNearbyRooms("south",4);
-//
-//		//3 deuren naar 1 5 3
-//		Room secondRoom = new Room("second room");
-//		secondRoom.addNearbyRooms("west",1);
-//		secondRoom.addNearbyRooms("east",3);
-//		secondRoom.addNearbyRooms("south",5);
-//		
-//		// 2 deuren naar 2 6	
-//		Room thirdRoom = new Room("third room");
-//		thirdRoom.addNearbyRooms("west",2);
-//		thirdRoom.addNearbyRooms("south",6);
-//		
-//		// 3 deuren naar 1 5 7
-//		Room fourthRoom = new Room("fourth room");
-//		fourthRoom.addNearbyRooms("north",1);
-//		fourthRoom.addNearbyRooms("east",5);
-//		fourthRoom.addNearbyRooms("south",7);
-//		
-//		// 4 deuren naar 2 4 6 8
-//		Room fifthRoom = new Room("fifth room");
-//		fifthRoom.addNearbyRooms("north",2);
-//		fifthRoom.addNearbyRooms("west",6);
-//		fifthRoom.addNearbyRooms("east",4);
-//		fifthRoom.addNearbyRooms("south",8);
-//		
-//		// 4 deuren naar 3 5 9 10
-//		Room sixthRoom = new Room("sixth room");
-//		sixthRoom.addNearbyRooms("north",3);
-//		sixthRoom.addNearbyRooms("west",5);
-//		sixthRoom.addNearbyRooms("east",10);
-//		sixthRoom.addNearbyRooms("south",9);
-//		
-//		// 2 deuren naar 4 8
-//		Room seventhRoom = new Room("seventh room");
-//		seventhRoom.addNearbyRooms("north",4);
-//		seventhRoom.addNearbyRooms("east",8);
-//		
-//		// 3 deuren naar 5 7 9
-//		Room eightRoom = new Room("eight room");
-//		eightRoom.addNearbyRooms("north",5);
-//		eightRoom.addNearbyRooms("east",9);
-//		eightRoom.addNearbyRooms("west",7);
-//		
-//		// 2 deuren naar 6 8
-//		Room ninethRoom = new Room("nineth room");
-//		ninethRoom.addNearbyRooms("north",6);
-//		ninethRoom.addNearbyRooms("west",8);
-//		
-//		//2 deuren naar 6 en eind
-//		Room tenthRoom = new Room("tenth room");
-//		tenthRoom.addNearbyRooms("east",6);
-//		tenthRoom.addNearbyRooms("west",1);
+		currentRoom = firstRoom;
+		Room secondRoom = new Room("second room");
+		Room thirdRoom = new Room("third room");
+		Room fourthRoom = new Room("fourth room");
+		Room fifthRoom = new Room("fifth room");
+		Room sixthRoom = new Room("sixth room");
+		Room seventhRoom = new Room("seventh room");
+		Room eightRoom = new Room("eight room");
+		Room ninethRoom = new Room("nineth room");
+		Room tenthRoom = new Room("tenth room");
+		Item torch = new Item("torch", "you can see");
+		Item key = new Item("key", "unlock a door");
+		Item sword = new Item("sword", "shank");
+		Item magicWand = new Item("magic wand", "use the weapon of a god"); // item of a god
+		Item stick = new Item("stick", "just a stick");
+		
+		firstRoom.addNearbyRooms("east",secondRoom);
+		firstRoom.addNearbyRooms("south",fourthRoom);
+		firstRoom.addItem(torch);
+		firstRoom.addItem(key);
+		
+		secondRoom.addNearbyRooms("west",firstRoom);
+		secondRoom.addNearbyRooms("east",thirdRoom);
+		secondRoom.addNearbyRooms("south",fifthRoom);
 
+		thirdRoom.addNearbyRooms("west",secondRoom);
+		thirdRoom.addNearbyRooms("south",sixthRoom);
+	
+		fourthRoom.addNearbyRooms("north",firstRoom);
+		fourthRoom.addNearbyRooms("east",fifthRoom);
+		fourthRoom.addNearbyRooms("south",seventhRoom);
 
+		fifthRoom.addNearbyRooms("north",secondRoom);
+		fifthRoom.addNearbyRooms("west",sixthRoom);
+		fifthRoom.addNearbyRooms("east",fourthRoom);
+		fifthRoom.addNearbyRooms("south",eightRoom);
+		
+		sixthRoom.addNearbyRooms("north",thirdRoom);
+		sixthRoom.addNearbyRooms("west",fifthRoom);
+		sixthRoom.addNearbyRooms("east",tenthRoom);
+		sixthRoom.addNearbyRooms("south",ninethRoom);
+		
+		seventhRoom.addNearbyRooms("north",fourthRoom);
+		seventhRoom.addNearbyRooms("east",eightRoom);
+		
+		eightRoom.addNearbyRooms("north",fifthRoom);
+		eightRoom.addNearbyRooms("east",ninethRoom);
+		eightRoom.addNearbyRooms("west",seventhRoom);
+		
+		ninethRoom.addNearbyRooms("north",sixthRoom);
+		ninethRoom.addNearbyRooms("west",eightRoom);
+		
+		tenthRoom.addNearbyRooms("east",sixthRoom);
+		tenthRoom.addNearbyRooms("west",firstRoom);
 	}
 	
 	private void handleUseCommand(String itemName) {

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player {
@@ -5,6 +6,7 @@ public class Player {
 //	instance variables 
 	private String name;
 	private Scanner scanner;
+	private	ArrayList<Item> item = new ArrayList<Item>();
 	
 //	create basic player in constructor
 	public Player () {
@@ -13,7 +15,7 @@ public class Player {
 	}
 	
 //	inputs van wat de speler wilt doen
-	public String getInput() {
+	public String getPlayAgain() {
 		String result = "?";
 		result = scanner.nextLine();
 		result = result.toLowerCase();
@@ -28,11 +30,16 @@ public class Player {
 		}
 	}
 	
+	//insert player name
 	public void setName() {
 		name = scanner.nextLine();	
 	}
-	
+
 	public String getName() {
 		return name;
+	}
+	
+	public void getItem(Item n_item) {
+		item.add(n_item);
 	}
 }
