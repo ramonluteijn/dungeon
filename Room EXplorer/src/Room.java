@@ -23,11 +23,20 @@ public class Room {
 			result += i + "\n"; 
 		} 
 		if(item != null) {
-			result += "items in room: \n";
+			result += "\nitems in room: \n";
 			for(Item i : item) {
 				result += i.getName() + "\n";
 			}
 		}
+		return result;
+	}
+	
+	//show layout of rooms
+	public String getMini() {
+		String result = "Layout of the map:";
+			result += "1 2 3\n";
+			result += "4 5 6 10\n";
+			result += "7 8 9\n";
 		return result;
 	}
 	
@@ -46,15 +55,14 @@ public class Room {
 		}
 	}
 	
-	public void getItem(String n_item) {
-		if(item.contains(n_item)) {
-			for(Item i : item) {
-				if(i.equals(n_item)) {
-					item.get(i);
-				}
+	//pickup item from room
+	public Item getItem(String n_item) {
+		for(Item i : item) {
+			if(i.getName().equals(n_item)) {
+				return i;
 			}
 		}
-		
+		return null;
 	}
 
 	// add item to room
@@ -66,12 +74,21 @@ public class Room {
 	public void removeItem(String n_item) {
 		for(Item i : item) {
 			if(i.getName().equals(n_item)) {
-				item.remove(i);
+				item.remove(i);	
+				break;
 			}
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+	
 	public void art() {
+		System.out.println("Oh no Fluffy spawned \n");
 		System.out.println("	     |\\_/|                  ");
 		System.out.println("	     | O O   Woof! ");
 		System.out.println("	     |   <>              _  ");
@@ -79,7 +96,5 @@ public class Room {
 		System.out.println("	     |               `--' |   ");
 		System.out.println("	 ____|_       ___|   |___.' ");
 		System.out.println("	/_/_____/____/_______|");
-
-
-	    }
+	}
 }

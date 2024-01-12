@@ -13,11 +13,13 @@ public class Game {
 	
 	public void play() {
 		boolean keepPlaying = true;
+//		System.out.println("insert name");
+//		player.setName();
 		setUpRooms();
 		String command = "?";
+//		currentRoom.art();
+	
 		while(keepPlaying) {
-//			System.out.println("insert name");
-//			player.setName();
 			System.out.println("insert command");
 			handleCommand(scanner.nextLine());	
 			// play again 
@@ -44,29 +46,61 @@ public class Game {
 	    String command = "?";
 	    if(arrOfStr.length >1) {
 	    	input = arrOfStr[1];
-	    	
 	    }
 	    command = arrOfStr[0];
 		switch(command) {
-			case "go": if(currentRoom.goRoom(input) == null) {
-							System.out.println("cannot go this way");
-						}
-						else {
-							currentRoom = currentRoom.goRoom(input);
-							System.out.println("travel was succesful");
-						}
+			case "map":
+						System.out.println(currentRoom.getMini());
+				break;
+			case "go":  
+					if(currentRoom.goRoom(input) == null) {
+						System.out.println("cannot go this way \n");
+					}
+					else {
+						currentRoom = currentRoom.goRoom(input);
+						System.out.println("travel to the "+currentRoom.getName()+" succesful \n");
+					}
 				break;
 			case "use": 
+					player.removeItem(input);
+					System.out.println("item is used");
 				break;
-			case "get": player.getItem(currentRoom.getItem(input));
-					currentRoom.removeItem(input);
+			case "get":
+					if(currentRoom.getItem(input) != null) {
+						player.addItem(currentRoom.getItem(input));
+						currentRoom.removeItem(input);
+						System.out.println("added to backpack \n");
+					}
+					else {
+						System.out.println("doesnt excist \n");
+					}
 				break;
+			case "drop":
+					if(player.getItem(input) != null) {
+						currentRoom.addItem(player.getItem(input));
+						player.removeItem(input);
+						System.out.println("removed from backpack \n");
+					}
+					else {
+						System.out.println("Not in backpack");
+						System.out.println("Use the following command: backpack");
+					}
+					break;
 			case "look":
-				 System.out.println("possibilities: ");
-				 System.out.println(currentRoom.getMap());	
+					 System.out.println(currentRoom.getName()+" possibilities: ");
+					 System.out.println(currentRoom.getMap());	
 				break;
 			case "help":
 				// print commands
+					System.out.println("go [direction]: north, east, south, west");
+					System.out.println("use [item]: the item you want to use");
+					System.out.println("get [item]: pick the item up from the room");
+					System.out.println("drop [item]: drop item in the current room");
+					System.out.println("look: look around in the room");
+					System.out.println("pack: shows everything in your backpack \n");
+				break;
+			case "pack":
+				System.out.println(player.backPack());
 				break;
 		}
 	}
@@ -87,20 +121,21 @@ public class Game {
 		Item torch = new Item("torch", "you can see");
 		Item key = new Item("key", "unlock a door");
 		Item sword = new Item("sword", "shank");
-		Item magicWand = new Item("magic wand", "use the weapon of a god"); // item of a god
+		Item magicWand = new Item("magic wand", "use the weapon of a god"); // item of a god to add fluffy
 		Item stick = new Item("stick", "just a stick");
-		
+			
 		firstRoom.addNearbyRooms("east",secondRoom);
 		firstRoom.addNearbyRooms("south",fourthRoom);
 		firstRoom.addItem(torch);
-		firstRoom.addItem(key);
 		
 		secondRoom.addNearbyRooms("west",firstRoom);
 		secondRoom.addNearbyRooms("east",thirdRoom);
 		secondRoom.addNearbyRooms("south",fifthRoom);
-
+		secondRoom.addItem(sword);
+		
 		thirdRoom.addNearbyRooms("west",secondRoom);
 		thirdRoom.addNearbyRooms("south",sixthRoom);
+		thirdRoom.addItem(stick);
 	
 		fourthRoom.addNearbyRooms("north",firstRoom);
 		fourthRoom.addNearbyRooms("east",fifthRoom);
@@ -118,6 +153,7 @@ public class Game {
 		
 		seventhRoom.addNearbyRooms("north",fourthRoom);
 		seventhRoom.addNearbyRooms("east",eightRoom);
+		seventhRoom.addItem(key);
 		
 		eightRoom.addNearbyRooms("north",fifthRoom);
 		eightRoom.addNearbyRooms("east",ninethRoom);
@@ -128,6 +164,7 @@ public class Game {
 		
 		tenthRoom.addNearbyRooms("east",sixthRoom);
 		tenthRoom.addNearbyRooms("west",firstRoom);
+		tenthRoom.addItem(magicWand);
 	}
 	
 	private void handleUseCommand(String itemName) {
