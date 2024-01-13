@@ -5,6 +5,7 @@ public class Room {
 	private HashMap<String, Room> nearbyRooms;
 	private String name;
 	private	ArrayList<Item> item = new ArrayList<Item>();
+	private boolean dark = false;
 	
 	public Room(String n_name) {
 		this.name = n_name;
@@ -17,15 +18,20 @@ public class Room {
 	}
 	
 	//look for other possible rooms to go to
-	public String getMap() {
+	public String getMap(boolean dark) {
 		String result = "";
-		for(String i : nearbyRooms.keySet()) {
+		if(dark) {
+			result = "use your torch to see \n";
+		}
+		else {
+			for(String i : nearbyRooms.keySet()) {
 			result += i + "\n"; 
-		} 
-		if(item != null) {
-			result += "\nitems in room: \n";
-			for(Item i : item) {
-				result += i.getName() + "\n";
+			} 
+			if(item != null) {
+				result += "\nitems in room: \n";
+				for(Item i : item) {
+					result += i.getName() + "\n";
+				}
 			}
 		}
 		return result;
@@ -33,7 +39,7 @@ public class Room {
 	
 	//show layout of rooms
 	public String getMini() {
-		String result = "Layout of the map:";
+		String result = "Layout of the map:\n";
 			result += "1 2 3\n";
 			result += "4 5 6 10\n";
 			result += "7 8 9\n";
@@ -78,23 +84,5 @@ public class Room {
 				break;
 			}
 		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	public void art() {
-		System.out.println("Oh no Fluffy spawned \n");
-		System.out.println("	     |\\_/|                  ");
-		System.out.println("	     | O O   Woof! ");
-		System.out.println("	     |   <>              _  ");
-		System.out.println("	     |  _/\\------____ ((| |))");
-		System.out.println("	     |               `--' |   ");
-		System.out.println("	 ____|_       ___|   |___.' ");
-		System.out.println("	/_/_____/____/_______|");
 	}
 }

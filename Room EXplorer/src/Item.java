@@ -15,7 +15,15 @@ public class Item {
 		return useText;
 	}
 	
-	public void useItem() {
-		
+	public String art() {
+		String result = "Oh no Fluffy spawned \n\n";
+		result +="	     |\\_/|                  \n";
+		result +="	     | O O   Woof! \n";
+		result +="	     |   <>              _  \n";
+		result +="	     |  _/\\------____ ((| |)) \n";
+		result +="	     |               `--' |   \n";
+		result +="	 ____|_       ___|   |___.' \n";
+		result +="	/_/_____/____/_______| \n" ;
+		return result;
 	}
 }

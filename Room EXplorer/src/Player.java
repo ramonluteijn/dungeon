@@ -14,22 +14,6 @@ public class Player {
 		name = "?";
 	}
 	
-////	inputs van wat de speler wilt doen
-//	public String getPlayAgain() {
-//		String result = "?";
-//		result = scanner.nextLine();
-//		result = result.toLowerCase();
-//		if(result.equals("n")) {
-//			return result;
-//		}
-//		else if(result.equals("y")) {
-//			return result;
-//		}
-//		else {
-//			return result;
-//		}
-//	}
-	
 	//insert player name
 	public void setName() {
 		name = scanner.nextLine();	
@@ -50,6 +34,28 @@ public class Player {
 		for(Item i : item) {
 			if(i.getName().equals(n_item)) {
 				return i;
+			}
+		}
+		return null;
+	}
+	
+	//gets the name of the item when used
+	public String getItemName(String n_item) {
+		for(Item i : item) {
+			if(i.getName().equals(n_item)) {
+				return i.getName();
+			}
+		}
+		return null;
+	}
+	
+	public String useItem(String n_item) {
+		for(Item i : item) {
+			if(i.getName().equals(n_item)) {
+				if(n_item.equals("magic-wand")) {
+					return i.getUseText()+"\n"+i.art();
+				}
+				return i.getUseText();
 			}
 		}
 		return null;
