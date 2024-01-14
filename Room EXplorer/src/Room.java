@@ -5,7 +5,6 @@ public class Room {
 	private HashMap<String, Room> nearbyRooms;
 	private String name;
 	private	ArrayList<Item> item = new ArrayList<Item>();
-	private boolean dark = false;
 	
 	public Room(String n_name) {
 		this.name = n_name;

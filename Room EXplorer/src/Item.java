@@ -15,6 +15,7 @@ public class Item {
 		return useText;
 	}
 	
+	//return magic wand art
 	public String art() {
 		String result = "Oh no Fluffy spawned \n\n";
 		result +="	     |\\_/|                  \n";

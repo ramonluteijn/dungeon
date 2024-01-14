@@ -5,14 +5,20 @@ public class Game {
 	private Scanner scanner;
 	private Player player;
 	private Room currentRoom;
+	private Room tenthRoomnr;
+	private Room firstRoomnr;
 	private boolean keepPlaying;
 	private boolean torchUsed = false;
+	private boolean pickaxeUsed = false;
+	private boolean keyUsed = false;
+	private boolean stickUsed = false;
 	
 	public Game() {
 		scanner = new Scanner(System.in);
 		player = new Player();
 	}
 	
+	//play game
 	public void play() {
 		keepPlaying = true;
 		System.out.println("insert name");
@@ -44,13 +50,22 @@ public class Game {
 						System.out.println(currentRoom.getMini());
 				break;
 			case "go":  
-					if(currentRoom.goRoom(input) == null) {
-						System.out.println("cannot go this way \n");
+				
+				if(currentRoom.goRoom(input) == null) {
+					System.out.println("cannot go this way \n");
+				}
+				else {
+					if(currentRoom.getName().equals("tenth room")) {
+						if(input.equals("east")) {
+							System.out.println(player.getName()+"\n, you finished the game");
+							keepPlaying = false;
+						}		
 					}
 					else {
 						currentRoom = currentRoom.goRoom(input);
 						System.out.println("travel to the "+currentRoom.getName()+" succesful \n");
-					}
+					}				
+				}
 				break;
 			case "use": 
 					if(player.getItem(input) != null) {
@@ -58,10 +73,41 @@ public class Game {
 						if(player.getItemName(input).equals("torch")) {
 							torchUsed = true;
 						}
-						else if(player.getItemName(input).equals("torch")) {
-							torchUsed = true;
+						//break wall to last room open
+						else if(player.getItemName(input).equals("pickaxe")) {
+							
+							if(currentRoom.getName().equals("sixth room")) {
+								pickaxeUsed = true;
+								 if(pickaxeUsed) {
+									 currentRoom.addNearbyRooms("east",tenthRoomnr);
+									 System.out.println("You opent up a wall to the end, type look to see which way");
+								 }
+							}
+							else {
+								System.out.println("these walls are not weak enough to be broken down, \nlook for a weaker wall\n");
+							}
 						}
 						
+						// end gane
+						else if(player.getItemName(input).equals("key")) {
+							if(currentRoom.getName().equals("tenth room")) {
+								keyUsed = true;
+								if(keyUsed) {
+									currentRoom.addNearbyRooms("east",firstRoomnr);
+								}
+							}
+							else {
+								System.out.println("look for a door\n");
+							}
+						}
+						else if(player.getItemName(input).equals("stick")) {
+							stickUsed = true;
+							if(stickUsed) {
+								System.out.println(player.useItem("stick"));
+								player.addItem(player.getItem("stick"));
+								
+							}
+						}
 					}	
 					else {
 						System.out.println("doesnt excist \n");
@@ -85,7 +131,7 @@ public class Game {
 					}
 					else {
 						System.out.println("Not in backpack");
-						System.out.println("Use the following command: backpack");
+						System.out.println("Use the following command the look in your backpack: pack");
 					}
 					break;
 			case "look":
@@ -99,6 +145,25 @@ public class Game {
 							 System.out.println(currentRoom.getMap(true));
 							 System.out.println("you can go back");
 						 }
+					 }
+					 else if(currentRoom.getName().equals("sixth room")) {
+						 if(!pickaxeUsed) {
+							  System.out.println(currentRoom.getMap(false));
+							  System.out.println("the east wall looks different, \nmaybe i can break it with a PICKAXE");
+						 }
+						 else {
+							  System.out.println(currentRoom.getMap(false));	
+						 } 
+					 }
+					 else if(currentRoom.getName().equals("tenth room")) {
+						 if(!keyUsed) {
+							 System.out.println(currentRoom.getMap(false));
+							 System.out.println("there is a door, \nmaybe i can open it with a KEY");
+						 }
+						 else {
+							  System.out.println(currentRoom.getMap(false));	
+						 }
+						 
 					 }
 					 else {
 						  System.out.println(currentRoom.getMap(false));	
@@ -129,6 +194,7 @@ public class Game {
 	private void setUpRooms() {
 		Room firstRoom = new Room("first room");
 		currentRoom = firstRoom;
+		firstRoomnr = firstRoom; 
 		Room secondRoom = new Room("second room");
 		Room thirdRoom = new Room("third room");
 		Room fourthRoom = new Room("fourth room");
@@ -138,43 +204,46 @@ public class Game {
 		Room eightRoom = new Room("eight room");
 		Room ninethRoom = new Room("nineth room");
 		Room tenthRoom = new Room("tenth room");
+		tenthRoomnr = tenthRoom;
 		Item torch = new Item("torch", "you can see");
 		Item key = new Item("key", "unlocked a door");
-		Item posion = new Item("posion", "get drunk");
-		Item magicWand = new Item("magic-wand", "you used the weapon of a god"); // item of a god to add fluffy
-		Item stick = new Item("stick", "just a stick");
+		Item pickaxe = new Item("pickaxe", "you broke the wall");
+		Item magicWand = new Item("magic-wand", "you used the weapon of a god");
+		Item stick = new Item("stick", "you used a stick to break a wall...\nyour stick broke... \nyou now have 2 smaller sticks\n");
 			
 		firstRoom.addNearbyRooms("east",secondRoom);
 		firstRoom.addNearbyRooms("south",fourthRoom);
+		
 		firstRoom.addItem(torch);
 		firstRoom.addItem(magicWand);
-
+		firstRoom.addItem(pickaxe);
+		firstRoom.addItem(stick);
+		firstRoom.addItem(key);
+		
 		secondRoom.addNearbyRooms("west",firstRoom);
 		secondRoom.addNearbyRooms("east",thirdRoom);
 		secondRoom.addNearbyRooms("south",fifthRoom);
-		secondRoom.addItem(posion);
+		
 		
 		thirdRoom.addNearbyRooms("west",secondRoom);
 		thirdRoom.addNearbyRooms("south",sixthRoom);
-		thirdRoom.addItem(stick);
+		
 	
 		fourthRoom.addNearbyRooms("north",firstRoom);
 		fourthRoom.addNearbyRooms("east",fifthRoom);
 		fourthRoom.addNearbyRooms("south",seventhRoom);
 
 		fifthRoom.addNearbyRooms("north",secondRoom);
-		fifthRoom.addNearbyRooms("west",sixthRoom);
-		fifthRoom.addNearbyRooms("east",fourthRoom);
+		fifthRoom.addNearbyRooms("east",sixthRoom);
+		fifthRoom.addNearbyRooms("west",fourthRoom);
 		fifthRoom.addNearbyRooms("south",eightRoom);
 		
 		sixthRoom.addNearbyRooms("north",thirdRoom);
 		sixthRoom.addNearbyRooms("west",fifthRoom);
-		sixthRoom.addNearbyRooms("east",tenthRoom);
 		sixthRoom.addNearbyRooms("south",ninethRoom);
 		
 		seventhRoom.addNearbyRooms("north",fourthRoom);
 		seventhRoom.addNearbyRooms("east",eightRoom);
-		seventhRoom.addItem(key);
 		
 		eightRoom.addNearbyRooms("north",fifthRoom);
 		eightRoom.addNearbyRooms("east",ninethRoom);
@@ -183,7 +252,6 @@ public class Game {
 		ninethRoom.addNearbyRooms("north",sixthRoom);
 		ninethRoom.addNearbyRooms("west",eightRoom);
 		
-		tenthRoom.addNearbyRooms("east",sixthRoom);
-		tenthRoom.addNearbyRooms("west",firstRoom);
+		tenthRoom.addNearbyRooms("west",sixthRoom);
 	}
 }

@@ -6,6 +6,7 @@ public class Player {
 //	instance variables 
 	private String name;
 	private Scanner scanner;
+	private boolean stickUsed = true;
 	private	ArrayList<Item> item = new ArrayList<Item>();
 	
 //	create basic player in constructor
@@ -49,11 +50,22 @@ public class Player {
 		return null;
 	}
 	
+	//return text when certain item is used
 	public String useItem(String n_item) {
 		for(Item i : item) {
 			if(i.getName().equals(n_item)) {
 				if(n_item.equals("magic-wand")) {
 					return i.getUseText()+"\n"+i.art();
+				}
+				else if(n_item.equals("stick")) {
+					if(stickUsed) {
+						stickUsed = false;
+						return i.getUseText();
+					}
+					else {
+						stickUsed = true;
+						return "";
+					}
 				}
 				return i.getUseText();
 			}
